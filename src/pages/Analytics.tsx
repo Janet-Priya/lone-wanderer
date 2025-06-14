@@ -1,3 +1,4 @@
+
 import { useMemo } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useQuery } from '@tanstack/react-query';
@@ -91,8 +92,8 @@ const Analytics = () => {
   if (!journalEntries || journalEntries.length === 0) {
     return (
       <div className="min-h-screen flex flex-col justify-center items-center text-center p-4 bg-cover bg-center font-pixel text-stone-200" style={{ backgroundImage: "url('/lovable-uploads/e1d62c79-b67b-4e3f-ad65-6f107da85107.png')"}}>
-        <h2 className="text-3xl text-yellow-300 mb-4">The Oracle's library is empty.</h2>
-        <p className="text-stone-300 mb-6">Embark on a new quest to begin charting your journey.</p>
+        <h2 className="text-3xl text-yellow-300 drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)] mb-4">The Oracle's library is empty.</h2>
+        <p className="text-stone-200 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] mb-6">Embark on a new quest to begin charting your journey.</p>
         <Link to="/">
           <Button variant="outline" className="bg-yellow-600/80 hover:bg-yellow-700 border-yellow-800 text-stone-900 font-bold">
             Begin a Quest
