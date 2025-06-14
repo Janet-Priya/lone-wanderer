@@ -1,8 +1,7 @@
-
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { roles } from '@/data/roles';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -62,10 +61,12 @@ const Index = () => {
             <img src="/lovable-uploads/e95e71f9-5631-48c0-8186-eb56045d8242.png" alt="XP" className="w-6 h-6" />
             <span>XP: {isLoadingStats ? '...' : userStats?.xp ?? 0}</span>
         </div>
-        <div className="bg-stone-900/70 border border-stone-700 rounded-md px-4 py-2 text-yellow-300 flex items-center gap-2">
-            <BookMarked size={20} />
-            <span>Wanderer's Log: {isLoadingCount ? '...' : questCount}</span>
-        </div>
+        <Link to="/logbook">
+            <div className="bg-stone-900/70 border-stone-700 rounded-md px-4 py-2 text-yellow-300 flex items-center gap-2 hover:border-yellow-500 transition-colors cursor-pointer">
+                <BookMarked size={20} />
+                <span>Wanderer's Log: {isLoadingCount ? '...' : questCount}</span>
+            </div>
+        </Link>
         <Button
           onClick={signOut}
           variant="outline"
