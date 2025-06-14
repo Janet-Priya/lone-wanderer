@@ -5,19 +5,51 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { roles } from '@/data/roles';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Loader2 } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
+import { QuestResultData } from '@/types';
+import QuestResult from '@/components/QuestResult';
+import { toast } from 'sonner';
 
 const Journal = () => {
   const { roleSlug } = useParams<{ roleSlug: string }>();
   const navigate = useNavigate();
   const [journalEntry, setJournalEntry] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [questResult, setQuestResult] = useState<QuestResultData | null>(null);
 
   const role = roles.find((r) => r.slug === roleSlug);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Journal for', role?.name, ':', journalEntry);
-    // TODO: LLM integration will happen here
+    if (!journalEntry.trim()) {
+      toast.error('Please write something in your journal.');
+      return;
+    }
+    setIsLoading(true);
+    setError(null);
+    setQuestResult(null);
+
+    try {
+      const { data, error: functionError } = await supabase.functions.invoke('generate-quest', {
+        body: { entry: journalEntry },
+      });
+
+      if (functionError) {
+        throw functionError;
+      }
+      
+      setQuestResult(data);
+      // TODO: Save to DB and award XP
+
+    } catch (err: any) {
+      console.error('Error invoking edge function:', err);
+      setError('The connection to the arcane realm has failed. Please try again.');
+      toast.error('The connection to the arcane realm has failed. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   if (!role) {
@@ -32,7 +64,7 @@ const Journal = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-cover bg-center font-pixel text-stone-200" style={{ backgroundImage: "url('/lovable-uploads/e1d62c79-b67b-4e3f-ad65-6f107da85107.png')" }}>
+    <div className="min-h-screen flex flex-col items-center p-4 bg-cover bg-center font-pixel text-stone-200" style={{ backgroundImage: "url('/lovable-uploads/e1d62c79-b67b-4e3f-ad65-6f107da85107.png')" }}>
       <div className="absolute top-4 left-4">
         <Button
           onClick={() => navigate('/')}
@@ -44,7 +76,7 @@ const Journal = () => {
         </Button>
       </div>
 
-      <main className="w-full max-w-2xl">
+      <main className="w-full max-w-4xl mt-20 mb-10">
         <Card className="bg-stone-900/80 border-stone-700 text-stone-200">
           <CardHeader className="text-center flex flex-col items-center">
             <img src={role.icon} alt={role.name} className="w-24 h-24 object-contain mb-4" />
@@ -59,18 +91,18 @@ const Journal = () => {
                 placeholder="Tell me what is on your mind, wanderer..."
                 className="bg-stone-800/80 border-stone-600 focus:ring-yellow-400 text-base min-h-[150px] font-sans text-stone-200"
                 rows={8}
+                disabled={isLoading}
               />
-              <Button type="submit" className="w-full bg-yellow-600 hover:bg-yellow-700 text-stone-900 font-bold">
-                Begin Quest
+              <Button type="submit" className="w-full bg-yellow-600 hover:bg-yellow-700 text-stone-900 font-bold" disabled={isLoading}>
+                {isLoading ? <Loader2 className="animate-spin" /> : 'Begin Quest'}
               </Button>
             </form>
           </CardContent>
         </Card>
+        
+        {error && <p className="text-red-400 text-center mt-4">{error}</p>}
 
-        {/* Placeholder for LLM response */}
-        <div className="mt-8 w-full">
-          {/* Results will be displayed here */}
-        </div>
+        {questResult && <QuestResult result={questResult} />}
       </main>
     </div>
   );
