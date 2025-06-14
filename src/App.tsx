@@ -12,6 +12,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Journal from "./pages/Journal";
 import Logbook from "./pages/Logbook";
 import Inventory from "./pages/Inventory";
+import Analytics from "./pages/Analytics";
 
 const queryClient = new QueryClient();
 
@@ -29,6 +30,7 @@ const App = () => (
               <Route path="/journal/:roleSlug" element={<Journal />} />
               <Route path="/logbook" element={<Logbook />} />
               <Route path="/inventory" element={<Inventory />} />
+              <Route path="/analytics" element={<Analytics />} />
             </Route>
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
@@ -40,3 +42,4 @@ const App = () => (
 );
 
 export default App;
+
