@@ -1,11 +1,10 @@
-
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardDescription } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -57,7 +56,7 @@ const Auth = () => {
     if (error) {
       toast({ title: 'Error', description: error.message, variant: 'destructive' });
     } else {
-      toast({ title: 'Success', description: 'Check your email for the confirmation link!' });
+      toast({ title: 'Success! Please verify your email.', description: "A confirmation link has been sent to your inbox. You must click it to activate your account before logging in." });
     }
     setLoading(false);
   };
@@ -71,8 +70,10 @@ const Auth = () => {
     >
       <Card className="w-full max-w-sm bg-stone-900/70 border-stone-700 text-stone-200">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl text-yellow-300">The Lone Wanderer</CardTitle>
-          <CardDescription className="text-stone-300">Sign in or create an account to begin your quest.</CardDescription>
+          <img src="/lovable-uploads/183784fd-3172-48e4-bc07-b6990c897722.png" alt="The Lone Wanderer Logo" className="w-48 mx-auto mb-4" />
+          <CardDescription className="text-stone-300">
+            Welcome, Wanderer. This is a sacred space to channel your emotions into epic quests. Chronicle your feelings, and watch as they transform into adventures for self-discovery and growth.
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <form className="space-y-4">
@@ -108,6 +109,13 @@ const Auth = () => {
               </Button>
             </div>
           </form>
+          <div className="text-center text-stone-400 text-xs mt-6 px-2 space-y-1">
+            <p className="font-bold text-stone-300 mb-2 text-sm">How Your Quest Unfolds:</p>
+            <p>1. Log your feelings in the Journal.</p>
+            <p>2. Receive a unique quest & a magical item.</p>
+            <p>3. Track your journey in the Logbook.</p>
+            <p>4. Gain insight & level up your spirit.</p>
+          </div>
         </CardContent>
       </Card>
     </div>
