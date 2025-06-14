@@ -31,6 +31,25 @@ const Index = () => {
     enabled: !!user,
   });
 
+  const { data: userStats, isLoading: isLoadingStats } = useQuery({
+    queryKey: ['userStats', user?.id],
+    queryFn: async () => {
+      if (!user) return null;
+      const { data, error } = await supabase
+        .from('user_stats')
+        .select('xp')
+        .eq('user_id', user.id)
+        .single();
+
+      if (error) {
+        console.error("Error fetching user stats:", error);
+        return null;
+      };
+      return data;
+    },
+    enabled: !!user,
+  });
+
   return (
     <div
       className="min-h-screen flex flex-col items-center p-4 bg-cover bg-center font-pixel text-stone-200"
@@ -39,6 +58,10 @@ const Index = () => {
       }}
     >
       <div className="absolute top-4 right-4 flex items-center gap-4">
+        <div className="bg-stone-900/70 border border-stone-700 rounded-md px-4 py-2 text-yellow-300 flex items-center gap-2">
+            <img src="/lovable-uploads/e95e71f9-5631-48c0-8186-eb56045d8242.png" alt="XP" className="w-6 h-6" />
+            <span>XP: {isLoadingStats ? '...' : userStats?.xp ?? 0}</span>
+        </div>
         <div className="bg-stone-900/70 border border-stone-700 rounded-md px-4 py-2 text-yellow-300 flex items-center gap-2">
             <BookMarked size={20} />
             <span>Wanderer's Log: {isLoadingCount ? '...' : questCount}</span>
@@ -52,9 +75,9 @@ const Index = () => {
         </Button>
       </div>
 
-      <div className="text-center my-8">
-        <h1 className="text-3xl text-yellow-300 drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">Choose Your Guide</h1>
-        <p className="text-stone-300">Logged in as: {user?.email}</p>
+      <div className="text-center my-24">
+        <h1 className="text-3xl text-yellow-300 drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)] inline-block overflow-hidden whitespace-nowrap border-r-4 border-r-yellow-300 animate-typing">Choose Your Guide</h1>
+        <p className="text-stone-300 mt-2">Logged in as: {user?.email}</p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl w-full">

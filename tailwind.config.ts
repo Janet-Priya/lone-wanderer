@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -88,14 +87,22 @@ export default {
 					to: {
 						height: '0'
 					}
-				}
+				},
+        typing: {
+          from: { width: "0" },
+          to: { width: "100%" },
+        },
+        "blink-caret": {
+          "from, to": { borderColor: "transparent" },
+          "50%": { borderColor: "inherit" },
+        },
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+        typing: "typing 2s steps(18, end), blink-caret .75s step-end infinite",
 			}
 		}
 	},
 	plugins: [require("tailwindcss-animate")],
 } satisfies Config;
-
