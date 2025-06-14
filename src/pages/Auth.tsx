@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useNavigate } from 'react-router-dom';
@@ -37,6 +38,14 @@ const Auth = () => {
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!email || !password) {
+      toast({
+        title: 'Input Required',
+        description: 'Please provide both an email and password to sign up.',
+        variant: 'destructive',
+      });
+      return;
+    }
     setLoading(true);
     const { error } = await supabase.auth.signUp({
       email,

@@ -1,4 +1,3 @@
-
 import { useMemo } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useQuery } from '@tanstack/react-query';
@@ -174,8 +173,7 @@ const Analytics = () => {
                       ))}
                     </Pie>
                     <ChartLegend
-                      content={<ChartLegendContent nameKey="name" />}
-                      className="flex-row"
+                      content={<ChartLegendContent nameKey="name" className="flex-wrap justify-center gap-2" />}
                       verticalAlign="bottom"
                     />
                   </PieChart>
