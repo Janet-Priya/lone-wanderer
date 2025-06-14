@@ -1,11 +1,10 @@
-
 import { useMemo } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { ChartContainer, ChartConfig, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-import { Bar, BarChart, Pie, PieChart, ResponsiveContainer, XAxis, YAxis } from 'recharts';
+import { Bar, BarChart, Pie, PieChart, ResponsiveContainer, XAxis, YAxis, CartesianGrid, Cell } from 'recharts';
 import { Loader2, BookOpen, Smile, Swords } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -164,13 +163,13 @@ const Analytics = () => {
             <CardContent>
                <ChartContainer config={classChartConfig} className="h-[300px] w-full">
                 <BarChart data={classData} margin={{ top: 20, right: 20, bottom: 40, left: 20 }}>
-                   <CartesianGrid vertical={false} strokeDasharray="3 3" />
+                   <CartesianGrid vertical={false} strokeDasharray="3 3" stroke="rgba(255, 255, 255, 0.2)" />
                   <XAxis dataKey="name" tick={{ fill: 'hsl(var(--muted-foreground))' }} angle={-45} textAnchor="end" height={60} />
                   <YAxis tick={{ fill: 'hsl(var(--muted-foreground))' }} />
                   <ChartTooltip content={<ChartTooltipContent />} />
                   <Bar dataKey="count" radius={4}>
                     {classData.map((entry, index) => (
-                       <Bar key={`cell-${index}`} fill={chartColors[index % chartColors.length]} />
+                       <Cell key={`cell-${index}`} fill={chartColors[index % chartColors.length]} />
                     ))}
                   </Bar>
                 </BarChart>
@@ -191,4 +190,3 @@ const Analytics = () => {
 };
 
 export default Analytics;
-
