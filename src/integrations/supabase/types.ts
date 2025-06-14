@@ -17,6 +17,7 @@ export type Database = {
           emotion: string | null
           id: string
           item: string | null
+          item_effect: string | null
           quest: string | null
           realm: string | null
           text: string | null
@@ -29,6 +30,7 @@ export type Database = {
           emotion?: string | null
           id?: string
           item?: string | null
+          item_effect?: string | null
           quest?: string | null
           realm?: string | null
           text?: string | null
@@ -41,12 +43,51 @@ export type Database = {
           emotion?: string | null
           id?: string
           item?: string | null
+          item_effect?: string | null
           quest?: string | null
           realm?: string | null
           text?: string | null
           user_id?: string
         }
         Relationships: []
+      }
+      user_inventory: {
+        Row: {
+          created_at: string
+          id: string
+          is_equipped: boolean
+          item_effect: string
+          item_name: string
+          journal_entry_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_equipped?: boolean
+          item_effect: string
+          item_name: string
+          journal_entry_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_equipped?: boolean
+          item_effect?: string
+          item_name?: string
+          journal_entry_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_inventory_journal_entry_id_fkey"
+            columns: ["journal_entry_id"]
+            isOneToOne: false
+            referencedRelation: "journal_entries"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_stats: {
         Row: {

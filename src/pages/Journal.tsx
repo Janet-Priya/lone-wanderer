@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -54,7 +55,7 @@ const Journal = () => {
       // Save to DB and award XP
       if (data && user) {
         const { quest: questData } = data;
-        const { error: insertError } = await supabase.from('journal_entries').insert([{
+        const { data: newEntry, error: insertError } = await supabase.from('journal_entries').insert([{
           user_id: user.id,
           text: sanitizedEntry,
           emotion: questData.emotion,
@@ -63,12 +64,28 @@ const Journal = () => {
           item: questData.item,
           quest: questData.quest,
           avatar_transformation: questData.transformation,
-        }]);
+          item_effect: questData.item_effect,
+        }]).select().single();
 
         if (insertError) {
           console.error("Failed to save journal entry:", insertError);
           toast.error("Could not save your quest progress, but here is your result!");
-        } else {
+        } else if (newEntry) {
+          // Save item to inventory
+          if (questData.item && questData.item_effect) {
+            const { error: inventoryError } = await supabase.from('user_inventory').insert([{
+              user_id: user.id,
+              journal_entry_id: newEntry.id,
+              item_name: questData.item,
+              item_effect: questData.item_effect,
+            }]);
+
+            if (inventoryError) {
+              console.error("Failed to save item to inventory:", inventoryError);
+              toast.warning("Failed to save your new item to the inventory.");
+            }
+          }
+          
           const XP_PER_QUEST = 25;
           const { error: xpError } = await supabase.rpc('increment_xp', {
             user_id_to_update: user.id,

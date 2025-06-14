@@ -6,7 +6,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { roles } from '@/data/roles';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { BookMarked, Shield } from 'lucide-react';
+import { BookMarked, Shield, Swords } from 'lucide-react';
 import WisdomWizardChat from '@/components/WisdomWizardChat';
 
 const Index = () => {
@@ -70,6 +70,12 @@ const Index = () => {
             <div className="bg-stone-900/70 border-stone-700 rounded-md px-4 py-2 text-yellow-300 flex items-center gap-2 hover:border-yellow-500 transition-colors cursor-pointer">
                 <BookMarked size={20} />
                 <span>Wanderer's Log: {isLoadingCount ? '...' : questCount}</span>
+            </div>
+        </Link>
+        <Link to="/inventory">
+            <div className="bg-stone-900/70 border-stone-700 rounded-md px-4 py-2 text-yellow-300 flex items-center gap-2 hover:border-yellow-500 transition-colors cursor-pointer">
+                <Swords size={20} />
+                <span>Inventory</span>
             </div>
         </Link>
         <Button
