@@ -2,32 +2,12 @@
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-
-const roles = [
-  {
-    name: 'Insight Oracle',
-    description: 'Summarizes your emotional state.',
-    icon: '/lovable-uploads/a46dc79e-1594-479f-88ce-073b7a6a975a.png', // King
-  },
-  {
-    name: 'Empath',
-    description: 'Validates your feelings and offers comfort.',
-    icon: '/lovable-uploads/7500485c-c568-4691-889d-951bc73cefff.png', // Torch
-  },
-  {
-    name: 'Healer',
-    description: 'Offers coping advice and strategies.',
-    icon: '/lovable-uploads/952378c2-3120-4c5c-bcfe-9c322d76cebb.png', // Armor
-  },
-  {
-    name: 'Pattern Watcher',
-    description: 'Identifies recurring emotional loops.',
-    icon: '/lovable-uploads/c2d753b7-0247-4d50-b35a-37dc9ae05fb0.png', // Sword
-  },
-];
+import { useNavigate } from 'react-router-dom';
+import { roles } from '@/data/roles';
 
 const Index = () => {
   const { user, signOut } = useAuth();
+  const navigate = useNavigate();
 
   return (
     <div
@@ -55,6 +35,7 @@ const Index = () => {
         {roles.map((role) => (
           <Card
             key={role.name}
+            onClick={() => navigate(`/journal/${role.slug}`)}
             className="bg-stone-900/70 border-stone-700 text-stone-200 hover:bg-stone-800/90 hover:border-yellow-500 cursor-pointer transition-all duration-300 transform hover:-translate-y-1"
           >
             <CardHeader className="text-center">
