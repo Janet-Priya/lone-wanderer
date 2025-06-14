@@ -16,6 +16,9 @@ export type Database = {
           created_at: string | null
           emotion: string | null
           id: string
+          insight_emotional_pattern: string | null
+          insight_growth_advice: string | null
+          insight_summary: string | null
           item: string | null
           item_effect: string | null
           quest: string | null
@@ -29,6 +32,9 @@ export type Database = {
           created_at?: string | null
           emotion?: string | null
           id?: string
+          insight_emotional_pattern?: string | null
+          insight_growth_advice?: string | null
+          insight_summary?: string | null
           item?: string | null
           item_effect?: string | null
           quest?: string | null
@@ -42,6 +48,9 @@ export type Database = {
           created_at?: string | null
           emotion?: string | null
           id?: string
+          insight_emotional_pattern?: string | null
+          insight_growth_advice?: string | null
+          insight_summary?: string | null
           item?: string | null
           item_effect?: string | null
           quest?: string | null

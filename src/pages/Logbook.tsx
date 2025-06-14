@@ -2,13 +2,14 @@
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
-import { useState } from 'react';
+import { Fragment, useState } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Pagination, PaginationContent, PaginationItem, PaginationPrevious, PaginationNext, PaginationEllipsis, PaginationLink } from '@/components/ui/pagination';
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, BookOpen } from 'lucide-react';
+import { ArrowLeft, BookOpen, ChevronDown } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 
 const ENTRIES_PER_PAGE = 8;
 
@@ -75,16 +76,59 @@ const Logbook = () => {
                                 <TableHead className="text-yellow-300">Emotion</TableHead>
                                 <TableHead className="text-yellow-300">Class</TableHead>
                                 <TableHead className="text-yellow-300">Quest</TableHead>
+                                <TableHead className="w-[50px]"></TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
                             {data.entries.map((entry) => (
-                                <TableRow key={entry.id} className="border-stone-700 hover:bg-stone-800/90">
-                                    <TableCell>{new Date(entry.created_at || '').toLocaleDateString()}</TableCell>
-                                    <TableCell>{entry.emotion}</TableCell>
-                                    <TableCell>{entry.class}</TableCell>
-                                    <TableCell className="max-w-sm truncate">{entry.quest}</TableCell>
-                                </TableRow>
+                                <Collapsible asChild key={entry.id}>
+                                  <Fragment>
+                                    <TableRow className="border-b-0 hover:bg-stone-800/90">
+                                        <TableCell>{new Date(entry.created_at || '').toLocaleDateString()}</TableCell>
+                                        <TableCell>{entry.emotion}</TableCell>
+                                        <TableCell>{entry.class}</TableCell>
+                                        <TableCell className="max-w-sm truncate">{entry.quest}</TableCell>
+                                        <TableCell>
+                                            <CollapsibleTrigger asChild>
+                                                <Button variant="ghost" size="sm" className="w-9 p-0">
+                                                    <ChevronDown className="h-4 w-4" />
+                                                    <span className="sr-only">Toggle</span>
+                                                </Button>
+                                            </CollapsibleTrigger>
+                                        </TableCell>
+                                    </TableRow>
+                                    <CollapsibleContent asChild>
+                                        <TableRow className="bg-stone-950/70">
+                                            <TableCell colSpan={5} className="p-0">
+                                                <div className="p-6 space-y-4 font-sans text-sm">
+                                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                                        <div>
+                                                            <h4 className="font-bold text-yellow-300 text-base mb-2">Quest Details</h4>
+                                                            <p><strong>Full Quest:</strong> {entry.quest}</p>
+                                                            <p><strong>Realm:</strong> {entry.realm}</p>
+                                                            <p><strong>Sacred Item:</strong> {entry.item} - <span className="italic text-stone-400">"{entry.item_effect}"</span></p>
+                                                            <p><strong>Avatar Transformation:</strong> {entry.avatar_transformation}</p>
+                                                        </div>
+                                                        <div>
+                                                            <h4 className="font-bold text-sky-300 text-base mb-2">Oracle's Insight</h4>
+                                                            <p><strong>Summary:</strong> {entry.insight_summary}</p>
+                                                            <p><strong>Emotional Pattern:</strong> {entry.insight_emotional_pattern}</p>
+                                                            <p><strong>Path to Growth:</strong> {entry.insight_growth_advice}</p>
+                                                        </div>
+                                                    </div>
+                                                    {entry.text && (
+                                                      <>
+                                                        <div className="border-t border-stone-700 my-4"></div>
+                                                        <h4 className="font-bold text-gray-300 text-base mb-2">Original Journal Entry</h4>
+                                                        <p className="italic text-stone-400 whitespace-pre-wrap">"{entry.text}"</p>
+                                                      </>
+                                                    )}
+                                                </div>
+                                            </TableCell>
+                                        </TableRow>
+                                    </CollapsibleContent>
+                                  </Fragment>
+                                </Collapsible>
                             ))}
                         </TableBody>
                     </Table>

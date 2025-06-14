@@ -54,7 +54,7 @@ const Journal = () => {
       
       // Save to DB and award XP
       if (data && user) {
-        const { quest: questData } = data;
+        const { quest: questData, insight: insightData } = data;
         const { data: newEntry, error: insertError } = await supabase.from('journal_entries').insert([{
           user_id: user.id,
           text: sanitizedEntry,
@@ -65,6 +65,9 @@ const Journal = () => {
           quest: questData.quest,
           avatar_transformation: questData.transformation,
           item_effect: questData.item_effect,
+          insight_summary: insightData.summary,
+          insight_growth_advice: insightData.growth_advice,
+          insight_emotional_pattern: insightData.emotional_pattern,
         }]).select().single();
 
         if (insertError) {
