@@ -6,7 +6,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { roles } from '@/data/roles';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { BookMarked } from 'lucide-react';
+import { BookMarked, Shield } from 'lucide-react';
 import WisdomWizardChat from '@/components/WisdomWizardChat';
 
 const Index = () => {
@@ -37,9 +37,9 @@ const Index = () => {
       if (!user) return null;
       const { data, error } = await supabase
         .from('user_stats')
-        .select('xp')
+        .select('xp, level')
         .eq('user_id', user.id)
-        .single();
+        .maybeSingle();
 
       if (error) {
         console.error("Error fetching user stats:", error);
@@ -58,6 +58,10 @@ const Index = () => {
       }}
     >
       <div className="absolute top-4 right-4 flex items-center gap-4">
+        <div className="bg-stone-900/70 border border-stone-700 rounded-md px-4 py-2 text-yellow-300 flex items-center gap-2">
+            <Shield size={20} className="text-green-400"/>
+            <span>Level: {isLoadingStats ? '...' : userStats?.level ?? 1}</span>
+        </div>
         <div className="bg-stone-900/70 border border-stone-700 rounded-md px-4 py-2 text-yellow-300 flex items-center gap-2">
             <img src="/lovable-uploads/e95e71f9-5631-48c0-8186-eb56045d8242.png" alt="XP" className="w-6 h-6" />
             <span>XP: {isLoadingStats ? '...' : userStats?.xp ?? 0}</span>
