@@ -45,8 +45,26 @@ const Journal = () => {
 
     } catch (err: any) {
       console.error('Error invoking edge function:', err);
-      setError('The connection to the arcane realm has failed. Please try again.');
-      toast.error('The connection to the arcane realm has failed. Please try again.');
+      
+      let errorMessage = 'The connection to the arcane realm has failed. Please try again.';
+
+      // supabase-js FunctionsHttpError has a context property with the response
+      if (err.context && typeof err.context.json === 'function') {
+        try {
+          const errorBody = await err.context.json();
+          if (errorBody.error && errorBody.error.includes('429')) {
+            errorMessage = 'The OpenAI realm is overwhelmed! This is likely due to rate limits or billing issues on your API key. Please check your OpenAI account dashboard.';
+          } else if (errorBody.error) {
+            errorMessage = `An arcane disturbance occurred: ${errorBody.error}`;
+          }
+        } catch (e) {
+          // Body wasn't json, fall through to default error.
+          console.error('Could not parse error response json', e);
+        }
+      }
+
+      setError(errorMessage);
+      toast.error(errorMessage, { duration: 10000 });
     } finally {
       setIsLoading(false);
     }
