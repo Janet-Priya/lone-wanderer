@@ -10,10 +10,12 @@ import { supabase } from '@/integrations/supabase/client';
 import { QuestResultData } from '@/types';
 import QuestResult from '@/components/QuestResult';
 import { toast } from 'sonner';
+import { useAuth } from '@/contexts/AuthContext';
 
 const Journal = () => {
   const { roleSlug } = useParams<{ roleSlug: string }>();
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [journalEntry, setJournalEntry] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -41,7 +43,34 @@ const Journal = () => {
       }
       
       setQuestResult(data);
-      // TODO: Save to DB and award XP
+      
+      // Save to DB and award XP
+      if (data && user && roleSlug) {
+        const { error: insertError } = await supabase.from('journal_entries').insert({
+          user_id: user.id,
+          entry_text: journalEntry,
+          quest_data: data,
+          role_slug: roleSlug,
+        });
+
+        if (insertError) {
+          console.error("Failed to save journal entry:", insertError);
+          toast.error("Could not save your quest progress, but here is your result!");
+        } else {
+          const XP_PER_QUEST = 25;
+          const { error: xpError } = await supabase.rpc('increment_xp', {
+            user_id_to_update: user.id,
+            xp_to_add: XP_PER_QUEST,
+          });
+
+          if (xpError) {
+            console.error("Failed to award XP:", xpError);
+            toast.warning("Failed to award XP for this quest.");
+          } else {
+            toast.success(`Quest complete! You earned ${XP_PER_QUEST} XP!`);
+          }
+        }
+      }
 
     } catch (err: any) {
       console.error('Error invoking edge function:', err);
