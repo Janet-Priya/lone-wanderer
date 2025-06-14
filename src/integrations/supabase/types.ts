@@ -9,7 +9,63 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      journal_entries: {
+        Row: {
+          avatar_transformation: string | null
+          class: string | null
+          created_at: string | null
+          emotion: string | null
+          id: string
+          item: string | null
+          quest: string | null
+          realm: string | null
+          text: string | null
+          user_id: string
+        }
+        Insert: {
+          avatar_transformation?: string | null
+          class?: string | null
+          created_at?: string | null
+          emotion?: string | null
+          id?: string
+          item?: string | null
+          quest?: string | null
+          realm?: string | null
+          text?: string | null
+          user_id: string
+        }
+        Update: {
+          avatar_transformation?: string | null
+          class?: string | null
+          created_at?: string | null
+          emotion?: string | null
+          id?: string
+          item?: string | null
+          quest?: string | null
+          realm?: string | null
+          text?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_stats: {
+        Row: {
+          level: number | null
+          user_id: string
+          xp: number | null
+        }
+        Insert: {
+          level?: number | null
+          user_id: string
+          xp?: number | null
+        }
+        Update: {
+          level?: number | null
+          user_id?: string
+          xp?: number | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
