@@ -1,9 +1,10 @@
+
 import { useMemo } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { ChartContainer, ChartConfig, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
+import { ChartContainer, ChartConfig, ChartTooltip, ChartTooltipContent, ChartLegend, ChartLegendContent } from "@/components/ui/chart";
 import { Bar, BarChart, Pie, PieChart, ResponsiveContainer, XAxis, YAxis, CartesianGrid, Cell } from 'recharts';
 import { Loader2, BookOpen, Smile, Swords } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -45,7 +46,7 @@ const Analytics = () => {
     }, {} as Record<string, number>);
 
     return Object.entries(counts)
-      .map(([name, value]) => ({ name, value, fill: 'var(--color-emotion)' }))
+      .map(([name, value]) => ({ name, value }))
       .sort((a, b) => b.value - a.value);
   }, [journalEntries]);
 
@@ -143,12 +144,40 @@ const Analytics = () => {
               <CardTitle className="text-xl text-yellow-300">Emotional Frequency</CardTitle>
               <CardDescription className="text-stone-300">A look at the emotions you've explored.</CardDescription>
             </CardHeader>
-            <CardContent className="aspect-square">
-              <ChartContainer config={emotionChartConfig}>
+            <CardContent className="flex items-center justify-center pt-8 aspect-square">
+              <ChartContainer
+                config={emotionChartConfig}
+                className="mx-auto aspect-square h-full max-w-[300px]"
+              >
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
-                    <ChartTooltip content={<ChartTooltipContent nameKey="name" hideLabel />} />
-                    <Pie data={emotionData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={120} labelLine={false} label={({ name, percent }) => `${name} (${(percent * 100).toFixed(0)}%)`} />
+                    <ChartTooltip
+                      cursor={false}
+                      content={<ChartTooltipContent hideLabel />}
+                    />
+                    <Pie
+                      data={emotionData}
+                      dataKey="value"
+                      nameKey="name"
+                      cx="50%"
+                      cy="50%"
+                      outerRadius={100}
+                      labelLine={false}
+                      label={false}
+                    >
+                      {emotionData.map((entry) => (
+                        <Cell
+                          key={`cell-${entry.name}`}
+                          fill={`var(--color-${entry.name})`}
+                          className="focus:outline-none"
+                        />
+                      ))}
+                    </Pie>
+                    <ChartLegend
+                      content={<ChartLegendContent nameKey="name" />}
+                      className="flex-row"
+                      verticalAlign="bottom"
+                    />
                   </PieChart>
                 </ResponsiveContainer>
               </ChartContainer>

@@ -6,9 +6,17 @@ import { useNavigate, Link } from 'react-router-dom';
 import { roles } from '@/data/roles';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { BookMarked, Shield, Swords, Lock, BarChart } from 'lucide-react';
+import { BookMarked, Shield, Swords, Lock, BarChart, Settings, LogOut } from 'lucide-react';
 import WisdomWizardChat from '@/components/WisdomWizardChat';
 import { cn } from '@/lib/utils';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
 const Index = () => {
   const { user, signOut } = useAuth();
@@ -69,31 +77,41 @@ const Index = () => {
             <img src="/lovable-uploads/e95e71f9-5631-48c0-8186-eb56045d8242.png" alt="XP" className="w-6 h-6" />
             <span>XP: {isLoadingStats ? '...' : userStats?.xp ?? 0}</span>
         </div>
-        <Link to="/logbook">
-            <div className="bg-stone-900/70 border-stone-700 rounded-md px-4 py-2 text-yellow-300 flex items-center gap-2 hover:border-yellow-500 transition-colors cursor-pointer">
-                <BookMarked size={20} />
-                <span>Wanderer's Log: {isLoadingCount ? '...' : questCount}</span>
-            </div>
-        </Link>
-        <Link to="/inventory">
-            <div className="bg-stone-900/70 border-stone-700 rounded-md px-4 py-2 text-yellow-300 flex items-center gap-2 hover:border-yellow-500 transition-colors cursor-pointer">
-                <Swords size={20} />
-                <span>Inventory</span>
-            </div>
-        </Link>
-        <Link to="/analytics">
-            <div className="bg-stone-900/70 border-stone-700 rounded-md px-4 py-2 text-yellow-300 flex items-center gap-2 hover:border-yellow-500 transition-colors cursor-pointer">
-                <BarChart size={20} />
-                <span>Analytics</span>
-            </div>
-        </Link>
-        <Button
-          onClick={signOut}
-          variant="outline"
-          className="bg-yellow-600/80 hover:bg-yellow-700 border-yellow-800 text-stone-900 font-bold"
-        >
-          Logout
-        </Button>
+        
+        <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+                <Button variant="outline" className="bg-stone-900/70 hover:bg-stone-800/90 border-stone-700 text-yellow-300 hover:border-yellow-500 p-2 h-auto">
+                    <Settings className="h-5 w-5" />
+                </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56 bg-stone-900/90 border-stone-700 text-stone-200 font-pixel">
+                <DropdownMenuLabel>My Journey</DropdownMenuLabel>
+                <DropdownMenuSeparator className="bg-stone-700" />
+                <DropdownMenuItem asChild>
+                    <Link to="/logbook" className="flex items-center gap-2 cursor-pointer w-full">
+                        <BookMarked size={16} />
+                        <span>Wanderer's Log ({isLoadingCount ? '...' : questCount})</span>
+                    </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                    <Link to="/inventory" className="flex items-center gap-2 cursor-pointer w-full">
+                        <Swords size={16} />
+                        <span>Inventory</span>
+                    </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                    <Link to="/analytics" className="flex items-center gap-2 cursor-pointer w-full">
+                        <BarChart size={16} />
+                        <span>Analytics</span>
+                    </Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator className="bg-stone-700" />
+                <DropdownMenuItem onClick={signOut} className="flex items-center gap-2 cursor-pointer text-red-400 focus:bg-red-900/50 focus:text-red-300">
+                    <LogOut size={16} />
+                    <span>Logout</span>
+                </DropdownMenuItem>
+            </DropdownMenuContent>
+        </DropdownMenu>
       </div>
 
       <div className="text-center my-24">
