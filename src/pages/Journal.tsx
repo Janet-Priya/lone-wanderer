@@ -168,7 +168,7 @@ const Journal = () => {
                 value={journalEntry}
                 onChange={(e) => setJournalEntry(e.target.value)}
                 placeholder="Tell me what is on your mind, wanderer..."
-                className="bg-stone-800/80 border-stone-600 focus:ring-yellow-400 text-base min-h-[150px] font-sans text-stone-200"
+                className="bg-stone-800/80 border-stone-600 focus:ring-yellow-400 text-base min-h-[150px] font-pixel text-stone-200"
                 rows={8}
                 disabled={isLoading}
                 maxLength={MAX_JOURNAL_LENGTH}
