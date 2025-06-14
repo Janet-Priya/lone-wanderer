@@ -97,7 +97,7 @@ const Logbook = () => {
                 <Pagination className="mt-6 text-stone-200">
                     <PaginationContent>
                         <PaginationItem>
-                            <PaginationPrevious href="#" onClick={(e) => { e.preventDefault(); setCurrentPage(p => Math.max(1, p - 1)); }} disabled={currentPage === 1} />
+                            <PaginationPrevious href="#" onClick={(e) => { e.preventDefault(); setCurrentPage(p => Math.max(1, p - 1)); }} className={currentPage === 1 ? "pointer-events-none opacity-50" : undefined} />
                         </PaginationItem>
                         {[...Array(totalPages)].map((_, i) => (
                           <PaginationItem key={i}>
@@ -107,7 +107,7 @@ const Logbook = () => {
                           </PaginationItem>
                         ))}
                         <PaginationItem>
-                            <PaginationNext href="#" onClick={(e) => { e.preventDefault(); setCurrentPage(p => Math.min(totalPages, p + 1)); }} disabled={currentPage === totalPages} />
+                            <PaginationNext href="#" onClick={(e) => { e.preventDefault(); setCurrentPage(p => Math.min(totalPages, p + 1)); }} className={currentPage === totalPages ? "pointer-events-none opacity-50" : undefined} />
                         </PaginationItem>
                     </PaginationContent>
                 </Pagination>

@@ -1,3 +1,4 @@
+
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -86,11 +87,11 @@ const Index = () => {
           <Card
             key={role.name}
             onClick={() => navigate(`/journal/${role.slug}`)}
-            className="bg-stone-900/70 border-stone-700 text-stone-200 hover:bg-stone-800/90 hover:border-yellow-500 cursor-pointer transition-all duration-300 transform hover:-translate-y-1"
+            className="bg-stone-900/70 border-stone-700 text-stone-200 hover:bg-stone-800/90 hover:border-yellow-500 cursor-pointer transition-all duration-300 transform hover:-translate-y-1 font-pixel"
           >
             <CardHeader className="text-center">
               <CardTitle className="text-xl text-yellow-300">{role.name}</CardTitle>
-              <CardDescription className="text-stone-300 h-10">{role.description}</CardDescription>
+              <CardDescription className="text-stone-300 h-10 text-xs">{role.description}</CardDescription>
             </CardHeader>
             <CardContent className="flex justify-center items-center p-6">
               <img src={role.icon} alt={role.name} className="w-24 h-24 object-contain" />
