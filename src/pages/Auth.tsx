@@ -70,7 +70,7 @@ const Auth = () => {
     >
       {/* Left Panel: Content */}
       <div className="hidden lg:flex flex-col justify-center items-start p-12 bg-stone-900/50 backdrop-blur-sm space-y-6">
-        <img src="/lovable-uploads/07e30047-faf1-4218-b752-b5267524d989.png" alt="The Lone Wanderer Logo" className="w-72 mb-4" />
+        <img src="/lovable-uploads/eabd2f92-8c46-42af-b234-2b2ac21c4db6.png" alt="The Lone Wanderer Logo" className="w-72 mb-4" />
         <h1 className="font-pixel text-3xl text-yellow-300 drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">Embark on a Quest of Self-Discovery</h1>
         <p className="text-stone-300 text-lg leading-relaxed">
           Life's trials are not burdens, but quests in disguise. Here, we transmute the lead of your daily struggles into the gold of heroic sagas. The Lone Wanderer is a sanctuary where your emotions are the ink, and your life, the parchment.
@@ -89,7 +89,7 @@ const Auth = () => {
       {/* Right Panel: Auth Form */}
       <div className="flex flex-col items-center justify-center p-4 bg-stone-900/90 lg:bg-stone-900/70 lg:backdrop-blur-sm">
         <div className="lg:hidden flex flex-col items-center text-center mb-6">
-            <img src="/lovable-uploads/07e30047-faf1-4218-b752-b5267524d989.png" alt="The Lone Wanderer Logo" className="w-48" />
+            <img src="/lovable-uploads/eabd2f92-8c46-42af-b234-2b2ac21c4db6.png" alt="The Lone Wanderer Logo" className="w-48" />
             <p className="font-pixel text-stone-300 mt-2 text-sm">Welcome, Wanderer.</p>
         </div>
         
