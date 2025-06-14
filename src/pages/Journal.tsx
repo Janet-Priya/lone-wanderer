@@ -11,6 +11,7 @@ import { QuestResultData } from '@/types';
 import QuestResult from '@/components/QuestResult';
 import { toast } from 'sonner';
 import { useAuth } from '@/contexts/AuthContext';
+import DOMPurify from 'dompurify';
 
 const Journal = () => {
   const { roleSlug } = useParams<{ roleSlug: string }>();
@@ -22,20 +23,27 @@ const Journal = () => {
   const [questResult, setQuestResult] = useState<QuestResultData | null>(null);
 
   const role = roles.find((r) => r.slug === roleSlug);
+  const MAX_JOURNAL_LENGTH = 5000;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!journalEntry.trim()) {
+    const sanitizedEntry = DOMPurify.sanitize(journalEntry);
+    if (!sanitizedEntry.trim()) {
       toast.error('Please write something in your journal.');
       return;
     }
+    if (sanitizedEntry.length > MAX_JOURNAL_LENGTH) {
+      toast.error(`Journal entry cannot exceed ${MAX_JOURNAL_LENGTH} characters.`);
+      return;
+    }
+
     setIsLoading(true);
     setError(null);
     setQuestResult(null);
 
     try {
       const { data, error: functionError } = await supabase.functions.invoke('generate-quest', {
-        body: { entry: journalEntry },
+        body: { entry: sanitizedEntry },
       });
 
       if (functionError) {
@@ -46,11 +54,16 @@ const Journal = () => {
       
       // Save to DB and award XP
       if (data && user && roleSlug) {
+        const { quest: questData } = data;
         const { error: insertError } = await supabase.from('journal_entries').insert({
           user_id: user.id,
-          entry_text: journalEntry,
-          quest_data: data,
-          role_slug: roleSlug,
+          text: sanitizedEntry,
+          emotion: questData.emotion,
+          class: questData.class,
+          realm: questData.realm,
+          item: questData.item,
+          quest: questData.quest,
+          avatar_transformation: questData.transformation,
         });
 
         if (insertError) {
@@ -139,6 +152,7 @@ const Journal = () => {
                 className="bg-stone-800/80 border-stone-600 focus:ring-yellow-400 text-base min-h-[150px] font-sans text-stone-200"
                 rows={8}
                 disabled={isLoading}
+                maxLength={MAX_JOURNAL_LENGTH}
               />
               <Button type="submit" className="w-full bg-yellow-600 hover:bg-yellow-700 text-stone-900 font-bold" disabled={isLoading}>
                 {isLoading ? <Loader2 className="animate-spin" /> : 'Begin Quest'}

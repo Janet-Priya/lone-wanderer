@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Loader2, Send } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import DOMPurify from 'dompurify';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -17,6 +18,7 @@ const WisdomWizardChat = () => {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const MAX_CHAT_LENGTH = 500;
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -26,9 +28,15 @@ const WisdomWizardChat = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!input.trim() || isLoading) return;
+    const sanitizedInput = DOMPurify.sanitize(input);
+    if (!sanitizedInput.trim() || isLoading) return;
 
-    const userMessage: Message = { role: 'user', content: input };
+    if (sanitizedInput.length > MAX_CHAT_LENGTH) {
+      toast.error(`Message cannot exceed ${MAX_CHAT_LENGTH} characters.`);
+      return;
+    }
+
+    const userMessage: Message = { role: 'user', content: sanitizedInput };
     setMessages((prev) => [...prev, userMessage]);
     setInput('');
     setIsLoading(true);
@@ -82,6 +90,7 @@ const WisdomWizardChat = () => {
             placeholder="Ask a question..."
             className="bg-stone-800/80 border-stone-600 focus:ring-yellow-400 font-pixel text-stone-200"
             disabled={isLoading}
+            maxLength={MAX_CHAT_LENGTH}
           />
           <Button type="submit" className="bg-yellow-600 hover:bg-yellow-700 text-stone-900 font-bold" disabled={isLoading}>
             {isLoading ? <Loader2 className="animate-spin" /> : <Send />}
