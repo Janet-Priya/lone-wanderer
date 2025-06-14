@@ -60,7 +60,7 @@ const WisdomWizardChat = () => {
         <CardDescription className="text-stone-300">Speak, and I shall ponder your words.</CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="h-80 overflow-y-auto p-4 border border-stone-700 rounded-md mb-4 bg-stone-800/50 space-y-4 font-sans text-base">
+        <div className="h-80 overflow-y-auto p-4 border border-stone-700 rounded-md mb-4 bg-stone-800/50 space-y-4 font-pixel text-base">
           {messages.length === 0 && (
             <div className="flex justify-center items-center h-full text-stone-400">
               Your conversation with the wizard begins here...
@@ -80,7 +80,7 @@ const WisdomWizardChat = () => {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Ask a question..."
-            className="bg-stone-800/80 border-stone-600 focus:ring-yellow-400 font-sans text-stone-200"
+            className="bg-stone-800/80 border-stone-600 focus:ring-yellow-400 font-pixel text-stone-200"
             disabled={isLoading}
           />
           <Button type="submit" className="bg-yellow-600 hover:bg-yellow-700 text-stone-900 font-bold" disabled={isLoading}>
