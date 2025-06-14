@@ -1,6 +1,9 @@
 
 # The Lone Wanderer: A Quest for Self-Discovery
 
+https://lone-wanderer.lovable.app/auth
+(here u can see it function) 
+
 The Lone Wanderer is a unique journaling application that transforms your emotional experiences into epic fantasy RPG quests. It's a sanctuary where your feelings become the catalyst for adventure, helping you navigate your inner world through a creative and engaging lens.
 
 ## Inspiration
