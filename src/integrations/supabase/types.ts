@@ -71,7 +71,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      increment_xp: {
+        Args: { user_id_to_update: string; xp_to_add: number }
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never

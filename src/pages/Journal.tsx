@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -53,9 +52,9 @@ const Journal = () => {
       setQuestResult(data);
       
       // Save to DB and award XP
-      if (data && user && roleSlug) {
+      if (data && user) {
         const { quest: questData } = data;
-        const { error: insertError } = await supabase.from('journal_entries').insert({
+        const { error: insertError } = await supabase.from('journal_entries').insert([{
           user_id: user.id,
           text: sanitizedEntry,
           emotion: questData.emotion,
@@ -64,7 +63,7 @@ const Journal = () => {
           item: questData.item,
           quest: questData.quest,
           avatar_transformation: questData.transformation,
-        });
+        }]);
 
         if (insertError) {
           console.error("Failed to save journal entry:", insertError);
