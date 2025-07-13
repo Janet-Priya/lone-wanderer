@@ -1,24 +1,12 @@
 
 import 'https://deno.land/x/xhr@0.1.0/mod.ts'
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
-import { HfInference } from 'https://esm.sh/@huggingface/inference@2.6.4'
 import { corsHeaders } from '../_shared/cors.ts'
 
-const hf = new HfInference(Deno.env.get('HUGGING_FACE_ACCESS_TOKEN'))
+const openAiApiKey = Deno.env.get('OPENAI_API_KEY')
 
 const SYSTEM_PROMPT = `You are a wise wizard from a medieval fantasy world named Eldrin. You speak with a touch of old English, using words like 'hark', 'perchance', 'verily', and 'alas'. Your goal is to offer profound, sometimes cryptic, wisdom to help the user reflect and find their own answers, not to give direct solutions. Keep your responses concise, like a sage who speaks little but says much.`
 
-function formatChatPrompt(messages: { role: string, content: string }[]) {
-  let prompt = `${SYSTEM_PROMPT}\n\n`;
-  for (const msg of messages) {
-    if (msg.role === 'user') {
-      prompt += `[INST] ${msg.content} [/INST]\n`;
-    } else {
-      prompt += `${msg.content}\n`;
-    }
-  }
-  return prompt;
-}
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -31,22 +19,32 @@ serve(async (req) => {
       throw new Error('No messages provided.')
     }
     
-    const hfPrompt = formatChatPrompt(messages);
-
-    const response = await hf.textGeneration({
-      model: 'mistralai/Mixtral-8x7B-Instruct-v0.1',
-      inputs: hfPrompt,
-      parameters: {
-        max_new_tokens: 256,
-        temperature: 0.8,
-        return_full_text: false,
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${openAiApiKey}`,
+        'Content-Type': 'application/json',
       },
+      body: JSON.stringify({
+        model: 'gpt-3.5-turbo',
+        messages: [
+          {
+            role: 'system',
+            content: SYSTEM_PROMPT
+          },
+          ...messages
+        ],
+        temperature: 0.8,
+        max_tokens: 256,
+      }),
     })
-    
-    let reply = response.generated_text.trim();
-    if (reply.startsWith("Wizard:") || reply.startsWith("Eldrin:")) {
-      reply = reply.substring(reply.indexOf(":") + 1).trim();
+
+    if (!response.ok) {
+      throw new Error(`OpenAI API error: ${response.status}`)
     }
+
+    const data = await response.json()
+    const reply = data.choices[0].message.content.trim()
     
     return new Response(JSON.stringify({ reply }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
