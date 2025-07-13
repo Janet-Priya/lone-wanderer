@@ -66,6 +66,10 @@ serve(async (req) => {
     if (!entry) {
       throw new Error('No journal entry provided.')
     }
+
+    if (!openAiApiKey) {
+      throw new Error('OpenAI API key not configured.')
+    }
     
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
@@ -91,7 +95,9 @@ serve(async (req) => {
     })
 
     if (!response.ok) {
-      throw new Error(`OpenAI API error: ${response.status}`)
+      const errorText = await response.text()
+      console.error('OpenAI API error:', response.status, errorText)
+      throw new Error(`OpenAI API error: ${response.status} - ${errorText}`)
     }
 
     const data = await response.json()

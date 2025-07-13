@@ -18,6 +18,10 @@ serve(async (req) => {
     if (!messages || !Array.isArray(messages) || messages.length === 0) {
       throw new Error('No messages provided.')
     }
+
+    if (!openAiApiKey) {
+      throw new Error('OpenAI API key not configured.')
+    }
     
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
@@ -40,7 +44,9 @@ serve(async (req) => {
     })
 
     if (!response.ok) {
-      throw new Error(`OpenAI API error: ${response.status}`)
+      const errorText = await response.text()
+      console.error('OpenAI API error:', response.status, errorText)
+      throw new Error(`OpenAI API error: ${response.status} - ${errorText}`)
     }
 
     const data = await response.json()
